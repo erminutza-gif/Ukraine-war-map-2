@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "occupied",
+        "name": "Occupied area (example)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [36.0, 47.0],
+            [38.0, 47.0],
+            [38.0, 49.0],
+            [36.0, 49.0],
+            [36.0, 47.0]
+          ]
+        ]
+      }
+    }
+  ]
+}
