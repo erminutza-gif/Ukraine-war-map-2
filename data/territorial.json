@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "status": "occupied", "name": "Example area" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[30, 48], [31, 48], [31, 49], [30, 49], [30, 48]]]
+      }
+    }
+  ]
+}
