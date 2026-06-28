@@ -21,43 +21,26 @@ let explosionsLayer;
 // We convert them into GeoJSON and display them.
 
 async function loadTerritorial() {
-  try {
-    const frontline = await fetch("https://deepstatemap.live/api/frontline").then(r => r.json());
-    const occupied = await fetch("https://deepstatemap.live/api/occupied").then(r => r.json());
-    const liberated = await fetch("https://deepstatemap.live/api/liberated").then(r => r.json());
+  const occupied = await fetch('data/occupied.geojson').then(r => r.json());
+  const liberated = await fetch('data/liberated.geojson').then(r => r.json());
+  const contested = await fetch('data/contested.geojson').then(r => r.json());
+  const frontline = await fetch('data/frontline.geojson').then(r => r.json());
 
-    // Convert DeepStateMap format → GeoJSON
-    function convert(ds) {
-      return {
-        type: "FeatureCollection",
-        features: ds.map(item => ({
-          type: "Feature",
-          properties: { status: item.status || "unknown" },
-          geometry: {
-            type: "Polygon",
-            coordinates: item.coords
-          }
-        }))
-      };
-    }
+  if (territorialLayer) map.removeLayer(territorialLayer);
 
-    const frontlineGeo = convert(frontline);
-    const occupiedGeo = convert(occupied);
-    const liberatedGeo = convert(liberated);
-
-    if (territorialLayer) map.removeLayer(territorialLayer);
-
-    territorialLayer = L.layerGroup([
-      L.geoJSON(frontlineGeo, {
-        style: { color: "#000", weight: 2, fillOpacity: 0 }
-      }),
-      L.geoJSON(occupiedGeo, {
-        style: { fillColor: "#d73027", color: "#333", weight: 1, fillOpacity: 0.6 }
-      }),
-      L.geoJSON(liberatedGeo, {
-        style: { fillColor: "#1a9850", color: "#333", weight: 1, fillOpacity: 0.6 }
-      })
-    ]).addTo(map);
+  territorialLayer = L.layerGroup([
+    L.geoJSON(frontline, { style: { color: "#000", weight: 2, fillOpacity: 0 }}),
+    L.geoJSON(occupied, {
+      style: { fillColor: "#d73027", color: "#333", weight: 1, fillOpacity: 0.6 }
+    }),
+    L.geoJSON(liberated, {
+      style: { fillColor: "#1a9850", color: "#333", weight: 1, fillOpacity: 0.6 }
+    }),
+    L.geoJSON(contested, {
+      style: { fillColor: "#fdae61", color: "#333", weight: 1, fillOpacity: 0.6 }
+    })
+  ]).addTo(map);
+}
 
   } catch (err) {
     console.error("Territorial load error:", err);
