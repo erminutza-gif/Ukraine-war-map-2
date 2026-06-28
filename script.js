@@ -1,6 +1,6 @@
-// -----------------------------
+// ------------------------------------------------------
 // INITIALIZE MAP
-// -----------------------------
+// ------------------------------------------------------
 const map = L.map('map').setView([48.5, 31.0], 6);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -14,33 +14,58 @@ let alertsLayer;
 let explosionsLayer;
 
 
-// -----------------------------
-// LOAD TERRITORIAL CONTROL (DeepStateMap API)
-// -----------------------------
-// DeepStateMap has an unofficial API that returns polygons.
-// We convert them into GeoJSON and display them.
-
+// ------------------------------------------------------
+// LOAD TERRITORIAL CONTROL (LOCAL GEOJSON FILES)
+// ------------------------------------------------------
 async function loadTerritorial() {
-  const occupied = await fetch('data/occupied.geojson').then(r => r.json());
-  const liberated = await fetch('data/liberated.geojson').then(r => r.json());
-  const contested = await fetch('data/contested.geojson').then(r => r.json());
-  const frontline = await fetch('data/frontline.geojson').then(r => r.json());
+  try {
+    const occupied = await fetch('data/occupied.geojson').then(r => r.json());
+    const liberated = await fetch('data/liberated.geojson').then(r => r.json());
+    const contested = await fetch('data/contested.geojson').then(r => r.json());
+    const frontline = await fetch('data/frontline.geojson').then(r => r.json());
 
-  if (territorialLayer) map.removeLayer(territorialLayer);
+    if (territorialLayer) map.removeLayer(territorialLayer);
 
-  territorialLayer = L.layerGroup([
-    L.geoJSON(frontline, { style: { color: "#000", weight: 2, fillOpacity: 0 }}),
-    L.geoJSON(occupied, {
-      style: { fillColor: "#d73027", color: "#333", weight: 1, fillOpacity: 0.6 }
-    }),
-    L.geoJSON(liberated, {
-      style: { fillColor: "#1a9850", color: "#333", weight: 1, fillOpacity: 0.6 }
-    }),
-    L.geoJSON(contested, {
-      style: { fillColor: "#fdae61", color: "#333", weight: 1, fillOpacity: 0.6 }
-    })
-  ]).addTo(map);
-}
+    territorialLayer = L.layerGroup([
+      // Frontline line
+      L.geoJSON(frontline, {
+        style: {
+          color: "#000",
+          weight: 2,
+          fillOpacity: 0
+        }
+      }),
+
+      // Occupied areas
+      L.geoJSON(occupied, {
+        style: {
+          fillColor: "#d73027",
+          color: "#333",
+          weight: 1,
+          fillOpacity: 0.6
+        }
+      }),
+
+      // Liberated areas
+      L.geoJSON(liberated, {
+        style: {
+          fillColor: "#1a9850",
+          color: "#333",
+          weight: 1,
+          fillOpacity: 0.6
+        }
+      }),
+
+      // Contested areas
+      L.geoJSON(contested, {
+        style: {
+          fillColor: "#fdae61",
+          color: "#333",
+          weight: 1,
+          fillOpacity: 0.6
+        }
+      })
+    ]).addTo(map);
 
   } catch (err) {
     console.error("Territorial load error:", err);
@@ -48,9 +73,9 @@ async function loadTerritorial() {
 }
 
 
-// -----------------------------
+// ------------------------------------------------------
 // LOAD AIR ALERTS (Ukraine Alarm API)
-// -----------------------------
+// ------------------------------------------------------
 async function loadAlerts() {
   try {
     const res = await fetch("https://api.ukrainealarm.com/api/v3/alerts");
@@ -90,9 +115,9 @@ async function loadAlerts() {
 }
 
 
-// -----------------------------
+// ------------------------------------------------------
 // LOAD EXPLOSIONS (LiveUAmap feed)
-// -----------------------------
+// ------------------------------------------------------
 async function loadExplosions() {
   try {
     const res = await fetch("https://liveuamap.com/events.json");
@@ -134,9 +159,9 @@ async function loadExplosions() {
 }
 
 
-// -----------------------------
+// ------------------------------------------------------
 // REFRESH ALL LAYERS
-// -----------------------------
+// ------------------------------------------------------
 async function refresh() {
   await loadTerritorial();
   await loadAlerts();
