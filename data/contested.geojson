@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "contested",
+        "name": "Contested area (example)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [34.0, 47.5],
+            [35.5, 47.5],
+            [35.5, 49.0],
+            [34.0, 49.0],
+            [34.0, 47.5]
+          ]
+        ]
+      }
+    }
+  ]
+}
